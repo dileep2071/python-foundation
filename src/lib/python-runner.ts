@@ -9,7 +9,7 @@ export function runPython(code: string, timeoutMs = 15_000): Promise<PythonRunRe
   return new Promise((resolve) => {
     let worker: Worker
     try {
-      pythonWorker ??= new Worker('/python-worker.js', { type: 'module' })
+      pythonWorker ??= new Worker(`${import.meta.env.BASE_URL}python-worker.js`, { type: 'module' })
       worker = pythonWorker
     } catch (error) {
       const detail = error instanceof Error ? error.message : 'The browser could not create a Python worker.'

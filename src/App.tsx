@@ -976,5 +976,5 @@ function AppRoutes() {
 }
 
 export default function App() {
-  return <LearningProvider><BrowserRouter><AppRoutes /></BrowserRouter></LearningProvider>
+  return <LearningProvider><BrowserRouter basename={import.meta.env.BASE_URL}><AppRoutes /></BrowserRouter></LearningProvider>
 }

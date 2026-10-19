@@ -1,4 +1,4 @@
-import { loadPyodide } from '/pyodide/pyodide.mjs'
+import { loadPyodide } from './pyodide/pyodide.mjs'
 
 let runtime
 
@@ -7,7 +7,7 @@ self.onmessage = async ({ data }) => {
   try {
     if (!runtime) {
       runtime = await loadPyodide({
-        indexURL: new URL('/pyodide/', self.location.origin).href,
+        indexURL: new URL('./pyodide/', import.meta.url).href,
       })
     }
 

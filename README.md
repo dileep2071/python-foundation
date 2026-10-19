@@ -69,9 +69,9 @@ npm run lint
 
 ## Deployment
 
-For a Vercel deployment, import the dedicated GitHub repository, use the Vite preset (or configure `npm run build` as the build command and `dist` as the output directory), and add the Supabase environment variables if authentication is enabled. The prebuild script copies the Python runtime assets into the output. Configure SPA fallback/rewrite behavior for direct navigation to routes such as `/lesson/module-00`.
+GitHub Pages deploys automatically from the `main` branch using the workflow in `.github/workflows/deploy-pages.yml`. The workflow sets the repository base path, builds the Vite app, adds a `404.html` fallback for client-side routes, and publishes `dist`. In the GitHub repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions**. The Vite router and Python worker use the same base path so client-side routes and Pyodide work from the project subpath.
 
-This project has not been deployed. No live domain, contact address, or production Supabase configuration is included.
+For Vercel instead, import the dedicated GitHub repository or deploy this folder with the Vercel CLI. The included `vercel.json` configures the Vite build, `dist` output, and SPA fallback. Add the Supabase environment variables in the hosting provider if authentication is enabled. No live domain, contact address, or production Supabase configuration is included.
 
 ## Security and limitations
 
