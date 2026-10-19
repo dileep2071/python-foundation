@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  workflows: write
   pages: write
   id-token: write
 
@@ -26,6 +27,19 @@ jobs:
           node-version: 24
       - name: Extract project source
         run: unzip -q python-foundation-pages-v2.zip -d source
+      - name: Restore project files in repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          while IFS= read -r -d "" path; do
+            if [ ! -e "source/$path" ]; then git rm -f -- "$path"; fi
+          done < <(git ls-files -z)
+          cp -R source/. .
+          git add --all
+          if ! git diff --cached --quiet; then
+            git commit -m "Restore Python Foundation source layout"
+            git push origin HEAD:main
+          fi
       - name: Build site
         working-directory: source
         run: npm ci && npm run build
