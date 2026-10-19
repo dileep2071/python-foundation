@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  workflows: write
   pages: write
   id-token: write
 
@@ -32,9 +31,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           while IFS= read -r -d "" path; do
-            if [ ! -e "source/$path" ]; then git rm -f -- "$path"; fi
+            if [ ! -e "source/$path" ] && [ "$path" != "python-foundation-pages-v2.zip" ]; then git rm -f -- "$path"; fi
           done < <(git ls-files -z)
-          cp -R source/. .
+          find source -mindepth 1 -maxdepth 1 ! -name .github -exec cp -R {} . \;
           git add --all
           if ! git diff --cached --quiet; then
             git commit -m "Restore Python Foundation source layout"
