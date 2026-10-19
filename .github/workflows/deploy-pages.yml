@@ -24,33 +24,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Extract project source
-        run: unzip -q python-foundation-pages-v2.zip -d source
-      - name: Restore project files in repository
+      - name: Remove migration artifacts
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          while IFS= read -r -d "" path; do
-            if [ ! -e "source/$path" ] && [ "$path" != "python-foundation-pages-v2.zip" ]; then git rm -f -- "$path"; fi
-          done < <(git ls-files -z)
-          find source -mindepth 1 -maxdepth 1 ! -name .github -exec cp -R {} . \;
-          git add --all
+          git rm -r --ignore-unmatch source python-foundation-pages-v2.zip
           if ! git diff --cached --quiet; then
-            git commit -m "Restore Python Foundation source layout"
+            git commit -m "Remove publishing migration artifacts"
             git push origin HEAD:main
           fi
-      - name: Build site
-        working-directory: source
+      - name: Install and build
         run: npm ci && npm run build
         env:
           GITHUB_PAGES: "true"
       - name: Add SPA fallback
-        working-directory: source
         run: cp dist/index.html dist/404.html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: source/dist
+          path: dist
 
   deploy:
     environment:
