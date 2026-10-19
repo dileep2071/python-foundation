@@ -24,14 +24,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: false
       - name: Extract project source
         run: unzip -q python-foundation-pages.zip -d source
       - name: Build site
         working-directory: source
         run: npm ci && npm run build
         env:
-          GITHUB_PAGES: 'true'
+          GITHUB_PAGES: "true"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
